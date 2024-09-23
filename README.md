@@ -1,6 +1,3 @@
-Sure! Here’s the Markdown code:
-
-```markdown
 ## Setting Up Your Environment
 
 1. **Copy the Example Environment File**
@@ -16,4 +13,3 @@ Sure! Here’s the Markdown code:
 ### Notes
 - Ensure you have Docker and Docker Compose installed on your system.
 - The `-d` flag runs your containers in detached mode, allowing them to run in the background.
-```
