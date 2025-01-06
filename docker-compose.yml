@@ -10,11 +10,11 @@ services:
       - ${METABASE_PORT}:3000
     environment:
       MB_DB_TYPE: postgres
-      MB_DB_DBNAME: metabaseappdb
+      MB_DB_DBNAME: ${POSTGRES_DB}
       MB_DB_PORT: 5432
-      MB_DB_USER: metabase
+      MB_DB_USER: ${POSTGRES_USER}
       MB_DB_PASS: ${POSTGRES_PASSWORD}
-      MB_DB_HOST: postgres
+      MB_DB_HOST: ${POSTGRES_HOST}
     networks:
       - metanet1
     healthcheck:
@@ -30,14 +30,27 @@ services:
     container_name: postgres
     hostname: postgres
     environment:
-      POSTGRES_USER: metabase
-      POSTGRES_DB: metabaseappdb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data:rw
     networks:
       - metanet1
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   metanet1:
     driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${POSTGRES_DATA_DIR}
